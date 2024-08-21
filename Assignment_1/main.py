@@ -26,7 +26,6 @@ def main():
 
             #Trial 1
             
-            #Obtain goal state(this gives us the co-ordinates of sphere)
             goal_state = sim_interface.get_goal_pose()
 
             #Obtain robots position

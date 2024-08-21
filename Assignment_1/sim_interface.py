@@ -36,7 +36,8 @@ def get_handles():
   global pioneer_handle
   global pioneer_left_motor_handle
   global pioneer_right_motor_handle
-  global goal_handle
+  #global goal_handle
+  global table_handle
 
   # Handle to Pioneer1:
   res , pioneer_handle = sim.simxGetObjectHandle(client_ID, "/Pioneer1", sim.simx_opmode_blocking)
@@ -52,15 +53,18 @@ def get_handles():
   res = sim.simxSetJointTargetVelocity(client_ID, pioneer_right_motor_handle, 0, sim.simx_opmode_streaming)
   
   # Handle to the goal:
-  res , goal_handle = sim.simxGetObjectHandle(client_ID, "/Sphere", sim.simx_opmode_blocking)
+  #res , goal_handle = sim.simxGetObjectHandle(client_ID, "/Sphere", sim.simx_opmode_blocking)
+  res , table_handle = sim.simxGetObjectHandle(client_ID, "/Table", sim.simx_opmode_blocking)
   
   #These two lines spawn the robot at the random points range given below, at the start of simulation
   x=np.random.randint(12.5,20,size=1)
   y=np.random.randint(19,21,size=1)
-  sim.simxSetObjectPosition(client_ID, goal_handle, -1 ,[x,y,0.35], sim.simx_opmode_streaming)
+  # sim.simxSetObjectPosition(client_ID, goal_handle, -1 ,[x,y,0.35], sim.simx_opmode_blocking)
+  sim.simxSetObjectPosition(client_ID, table_handle, -1 ,[x,y,0.35], sim.simx_opmode_blocking)
   
   # Get the position of the goal for the first time in streaming mode
-  res , goalPosition = sim.simxGetObjectPosition(client_ID, goal_handle, -1 , sim.simx_opmode_streaming)
+  # res , goalPosition = sim.simxGetObjectPosition(client_ID, goal_handle, -1 , sim.simx_opmode_streaming)
+  res , goalPosition = sim.simxGetObjectPosition(client_ID, table_handle, -1 , sim.simx_opmode_streaming)
 
   print ("Succesfully obtained handles")
 
@@ -149,17 +153,20 @@ def change_goal_pose():
   #Function to change goal pose 
   global sim
   global client_ID
-  global goal_handle
+  # global goal_handle
+  global table_handle
   
   a = np.random.randint(1,3)
   if a==1:
     x = np.random.randint(21,23,size=1)
     y = np.random.randint(12.5,19,size=1)
-    sim.simxSetObjectPosition(client_ID, goal_handle, -1 ,[x,y,0.35], sim.simx_opmode_streaming)
+    # sim.simxSetObjectPosition(client_ID, goal_handle, -1 ,[x,y,0.35], sim.simx_opmode_streaming)
+    sim.simxSetObjectPosition(client_ID, table_handle, -1 ,[x,y,0.35], sim.simx_opmode_streaming)
   else:
     x = np.random.randint(3,7,size=1)
     y = np.random.randint(12.5,19,size=1)
-    sim.simxSetObjectPosition(client_ID, goal_handle, -1 ,[x,y,0.35], sim.simx_opmode_streaming)
+    #sim.simxSetObjectPosition(client_ID, goal_handle, -1 ,[x,y,0.35], sim.simx_opmode_streaming)
+    sim.simxSetObjectPosition(client_ID, table_handle, -1 ,[x,y,0.35], sim.simx_opmode_streaming)
   return
           
 def get_goal_pose():
@@ -167,12 +174,17 @@ def get_goal_pose():
   #PS. THE ORIENTATION WILL BE RETURNED IN RADIANS        
   global sim
   global client_ID
-  global goal_handle
+  # global goal_handle
+  global table_handle
     
   #Obtain goal position
-  res , goalPosition = sim.simxGetObjectPosition(client_ID, goal_handle, -1 , sim.simx_opmode_streaming)
-  res , goalPosition = sim.simxGetObjectPosition(client_ID, goal_handle, -1 , sim.simx_opmode_buffer)
-  res , goalOrientation = sim.simxGetObjectOrientation(client_ID, goal_handle, -1 , sim.simx_opmode_buffer)
+  # res , goalPosition = sim.simxGetObjectPosition(client_ID, goal_handle, -1 , sim.simx_opmode_streaming)
+  # res , goalPosition = sim.simxGetObjectPosition(client_ID, goal_handle, -1 , sim.simx_opmode_buffer)
+  # res , goalOrientation = sim.simxGetObjectOrientation(client_ID, goal_handle, -1 , sim.simx_opmode_buffer)
+
+  res , goalPosition = sim.simxGetObjectPosition(client_ID, table_handle, -1 , sim.simx_opmode_streaming)
+  res , goalPosition = sim.simxGetObjectPosition(client_ID, table_handle, -1 , sim.simx_opmode_buffer)
+  res , goalOrientation = sim.simxGetObjectOrientation(client_ID, table_handle, -1 , sim.simx_opmode_buffer)
     
   x = goalPosition[0]
   y = goalPosition[1]
